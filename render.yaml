@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: complaint-backend
+    runtime: java
+    buildCommand: cd backend && ./mvnw clean install -DskipTests
+    startCommand: cd backend && java -jar target/*.jar
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: complaint-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: complaint-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: complaint-db
+          property: password
+
+  - type: web
+    name: complaint-frontend
+    runtime: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://complaint-backend.onrender.com/api
+
+databases:
+  - name: complaint-db
+    plan: free
+    databaseName: complaintdb
