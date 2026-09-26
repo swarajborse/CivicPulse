@@ -21,15 +21,6 @@ services:
           name: complaint-db
           property: password
 
-  - type: web
-    name: complaint-frontend
-    env: static
-    buildCommand: cd frontend && npm install && npm run build
-    staticPublishPath: frontend/dist
-    envVars:
-      - key: VITE_API_URL
-        value: https://complaint-backend.onrender.com/api
-
 databases:
   - name: complaint-db
     plan: free
